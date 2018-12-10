@@ -8,6 +8,7 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
+import org.bukkit.entity.Wither;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
@@ -15,6 +16,7 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 
+import com.aymegike.huminesafe.HumineSafe;
 import com.aypi.utils.Square;
 import com.aypi.utils.Zone;
 import com.aypi.utils.inter.ZoneListener;
@@ -51,6 +53,23 @@ public class ZoneSafe {
 				for (Sound sound : soundsEnter) {
 					player.playSound(player.getLocation(), sound, 5, 1);
 				}
+				
+				PlayerCoolDown pc = null;
+				
+				for (PlayerCoolDown pcd : HumineSafe.getPlayerCoolDownManager().getPCDS()) {
+					if (pcd.getPlayer().getName().equalsIgnoreCase(player.getName())) {
+						pc = pcd;
+					}
+				}
+				
+				if (pc != null) {
+					pc.startEnter(false);
+				} else {
+					PlayerCoolDown pcd = new PlayerCoolDown(player);
+					pcd.startEnter(true);
+				}
+				
+				
 			}
 
 			@Override
@@ -61,6 +80,24 @@ public class ZoneSafe {
 				for (Sound sound : soundsExit) {
 					player.playSound(player.getLocation(), sound, 5, 1);
 				}
+				
+				PlayerCoolDown pc = null;
+				
+				for (PlayerCoolDown pcd : HumineSafe.getPlayerCoolDownManager().getPCDS()) {
+					if (pcd.getPlayer().getName().equalsIgnoreCase(player.getName())) {
+						pc = pcd;
+					}
+				}
+				
+				if (pc != null) {
+					pc.startExit(false);
+				} else {
+					PlayerCoolDown pcd = new PlayerCoolDown(player);
+					pcd.startExit(true);
+					
+				}
+				
+				
 			}
 
 			@Override
@@ -95,6 +132,12 @@ public class ZoneSafe {
 							e.setCancelled(true);
 						}
 					}
+				}
+				
+				else if (entity instanceof Wither) {
+					
+					((Wither) entity).setHealth(0);
+					
 				}
 			}
 			

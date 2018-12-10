@@ -5,6 +5,7 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.aymegike.huminesafe.event.Spawn;
+import com.aymegike.huminesafe.manager.PlayerCoolDownManager;
 import com.aymegike.huminesafe.manager.SafeZoneGenerator;
 
 public class HumineSafe extends JavaPlugin{
@@ -12,6 +13,7 @@ public class HumineSafe extends JavaPlugin{
 	public static final String VERSION = "1.0";
 	
 	private static SafeZoneGenerator szg;
+	private static PlayerCoolDownManager pcdms;
 	
 	public void onEnable() {
 		System.out.println("------------------------------------------------------------");
@@ -24,7 +26,8 @@ public class HumineSafe extends JavaPlugin{
 		
 		
 		////////////////////////////////
-		szg = new SafeZoneGenerator();	
+		szg = new SafeZoneGenerator();
+		pcdms = new PlayerCoolDownManager();
 	}
 	
 	public void onDisable() {
@@ -33,6 +36,10 @@ public class HumineSafe extends JavaPlugin{
 	
 	public static SafeZoneGenerator getSafeZoneGenerator() {
 		return szg;
+	}
+	
+	public static PlayerCoolDownManager getPlayerCoolDownManager() {
+		return pcdms;
 	}
 
 }
