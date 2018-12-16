@@ -4,6 +4,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import com.aymegike.huminesafe.event.PlayerJoin;
+import com.aymegike.huminesafe.event.PlayerLeft;
 import com.aymegike.huminesafe.event.Spawn;
 import com.aymegike.huminesafe.manager.PlayerCoolDownManager;
 import com.aymegike.huminesafe.manager.SafeZoneGenerator;
@@ -23,7 +25,8 @@ public class HumineSafe extends JavaPlugin{
 		//EVENTMANAGER
 		PluginManager pm = Bukkit.getPluginManager();
 		pm.registerEvents(new Spawn(), this);
-		
+		pm.registerEvents(new PlayerJoin(), this);
+		pm.registerEvents(new PlayerLeft(), this);
 		
 		////////////////////////////////
 		szg = new SafeZoneGenerator();

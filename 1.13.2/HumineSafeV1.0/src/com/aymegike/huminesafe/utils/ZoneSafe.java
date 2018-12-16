@@ -43,6 +43,24 @@ public class ZoneSafe {
 			@Override
 			public void onDamage(Entity entity, EntityDamageEvent e) {
 				
+				if (entity instanceof Player) {
+					Player player = ((Player) entity).getPlayer();
+					
+					if (!HumineSafe.getPlayerCoolDownManager().containPlayer(player)) {
+						for (PlayerCoolDown pcd : HumineSafe.getPlayerCoolDownManager().getPCDS()) {
+							
+							if (pcd.getPlayer().getName().equalsIgnoreCase(player.getName()) && pcd.getCoolDownState() == CoolDownState.INCRESS) {
+								
+								pcd.addCoolDown(10);
+								
+								return;
+							}
+							
+							
+						}
+					}
+				}
+				
 			}
 
 			@Override
@@ -102,6 +120,35 @@ public class ZoneSafe {
 
 			@Override
 			public void onPlayerMoveInZone(Player player, PlayerMoveEvent e) {
+				if (!HumineSafe.getPlayerCoolDownManager().containPlayer(player)) {
+					
+					if (!HumineSafe.getPlayerCoolDownManager().containPlayerCoolDown(player)) {
+					
+						for (String message : messagesEnter) {
+							player.sendMessage(message.replace("&", "§").replaceAll("%PLAYER%", player.getName()));
+						}
+						for (Sound sound : soundsEnter) {
+							player.playSound(player.getLocation(), sound, 5, 1);
+						}
+						
+						PlayerCoolDown pc = null;
+						
+						for (PlayerCoolDown pcd : HumineSafe.getPlayerCoolDownManager().getPCDS()) {
+							if (pcd.getPlayer().getName().equalsIgnoreCase(player.getName())) {
+								pc = pcd;
+							}
+						}
+						
+						if (pc != null) {
+							pc.startEnter(false);
+						} else {
+							PlayerCoolDown pcd = new PlayerCoolDown(player);
+							pcd.startEnter(true);
+						}
+						
+					}
+					
+				}
 				
 			}
 
@@ -123,12 +170,12 @@ public class ZoneSafe {
 			@Override
 			public void onDamageByEntity(Entity entity, EntityDamageByEntityEvent e) {
 				if (entity instanceof Player) {
-					if (e.getDamager() instanceof Player) {
+					if (e.getDamager() instanceof Player && (HumineSafe.getPlayerCoolDownManager().containPlayer(((Player) entity).getPlayer()) || HumineSafe.getPlayerCoolDownManager().containPlayer(((Player) e.getDamager()).getPlayer()) )) {
 						e.setCancelled(true);
 					}
-					if (e.getDamager() instanceof Projectile) {
+					if (e.getDamager() instanceof Projectile && HumineSafe.getPlayerCoolDownManager().containPlayer(((Player) entity).getPlayer())) {
 						Projectile p = (Projectile) e.getDamager();
-						if (p.getShooter() instanceof Player) {
+						if (p.getShooter() instanceof Player && HumineSafe.getPlayerCoolDownManager().containPlayer(((Player) e.getDamager()).getPlayer())) {
 							e.setCancelled(true);
 						}
 					}
