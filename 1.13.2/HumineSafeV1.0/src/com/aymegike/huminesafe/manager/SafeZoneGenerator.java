@@ -31,12 +31,7 @@ public class SafeZoneGenerator {
 			}
 		} else {
 			System.out.println("[HumineSafe] aucun fichier xml a charger.");
-		}
-		
-		
-		
-		
-		
+		}		
 	}
 	
 	public void addZone(ZoneSafe zone) {

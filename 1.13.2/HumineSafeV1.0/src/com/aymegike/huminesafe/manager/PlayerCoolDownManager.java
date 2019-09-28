@@ -8,8 +8,7 @@ import com.aymegike.huminesafe.utils.PlayerCoolDown;
 
 public class PlayerCoolDownManager {
 	
-	private ArrayList<PlayerCoolDown> pcds;
-	
+	private ArrayList<PlayerCoolDown> pcds;	
 	private ArrayList<Player> pls;
 	
 	public PlayerCoolDownManager() {
@@ -39,11 +38,15 @@ public class PlayerCoolDownManager {
 	
 	public ArrayList<Player> getPlayers() {
 		return pls;
-	}
-	
+	}	
 	
 	public boolean containPlayer(Player player) {
 		return pls.contains(player);
+	}
+	
+	public void addCooldownForPlayer(Player player)
+	{
+		pls.contains(player);
 	}
 	
 	public boolean containPlayerCoolDown(Player player) {
