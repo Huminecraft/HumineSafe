@@ -80,8 +80,7 @@ public class XMLHandler extends DefaultHandler {
 	public void endElement(String nameSpaceURI, String localName, String qName) {
 		
 		if (qName.equalsIgnoreCase("zone-safe")) {
-			zoneSafe.initSquare();
-			zoneSafe.initZone();
+			zoneSafe.init();
 			zoneSafe = null;
 		}
 		

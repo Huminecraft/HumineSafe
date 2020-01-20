@@ -1,6 +1,12 @@
 name: HumineSafe
 version: 1.0
-api-version: 1.13
-author: Aymegike
+api-version: 1.15
+author: Luffyys
 main: com.aymegike.huminesafe.HumineSafe
 depend: [Aypi]
+commands:
+  zone:
+    aliases: zone
+    description: Tell you in which zone your are
+    permission:
+    usage:

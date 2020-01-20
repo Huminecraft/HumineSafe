@@ -4,8 +4,10 @@ import org.bukkit.Bukkit;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import com.aymegike.humineclaim.listener.command.ShowMenuCommand;
+import com.aymegike.huminesafe.commands.AskZoneCommand;
+import com.aymegike.huminesafe.event.DamageOnPlayer;
 import com.aymegike.huminesafe.event.PlayerJoin;
-import com.aymegike.huminesafe.event.PlayerLeft;
 import com.aymegike.huminesafe.event.Spawn;
 import com.aymegike.huminesafe.manager.PlayerCoolDownManager;
 import com.aymegike.huminesafe.manager.SafeZoneGenerator;
@@ -26,7 +28,9 @@ public class HumineSafe extends JavaPlugin{
 		PluginManager pm = Bukkit.getPluginManager();
 		pm.registerEvents(new Spawn(), this);
 		pm.registerEvents(new PlayerJoin(), this);
-		pm.registerEvents(new PlayerLeft(), this);
+		pm.registerEvents(new DamageOnPlayer(), this);
+		
+		this.getCommand("zone").setExecutor(new AskZoneCommand());
 		
 		////////////////////////////////
 		szg = new SafeZoneGenerator();
@@ -34,7 +38,7 @@ public class HumineSafe extends JavaPlugin{
 	}
 	
 	public void onDisable() {
-		System.out.println("[HumineSafe] Des bisous !");
+		System.out.println("[HumineSafe] Disabled !");
 	}
 	
 	public static SafeZoneGenerator getSafeZoneGenerator() {

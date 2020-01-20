@@ -3,7 +3,6 @@ package com.aymegike.huminesafe.utils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.boss.BarColor;
-import org.bukkit.boss.BarFlag;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Player;
@@ -13,7 +12,7 @@ import com.aymegike.huminesafe.HumineSafe;
 public class PlayerCoolDown {
 	
 	private Player player;
-	private BossBar bb;
+	private BossBar bossBar;
 	
 	private int task;
 	private int coolDown = 0;
@@ -21,11 +20,18 @@ public class PlayerCoolDown {
 	
 	private CoolDownState cds = CoolDownState.NONE;
 	
-	public PlayerCoolDown(Player player) {
+	public PlayerCoolDown(Player player, boolean isEntering) {
 		this.player = player;	
 		HumineSafe.getPlayerCoolDownManager().addPlayerCoolDown(this);
-		bb = Bukkit.createBossBar(ChatColor.DARK_PURPLE+"Tes pieds foules des terres sacrées... "+ChatColor.WHITE+coolDown+"/"+coolDownMax, BarColor.PURPLE, BarStyle.SOLID, BarFlag.DARKEN_SKY);
-		bb.addPlayer(player);
+		if (isEntering)
+		{
+			bossBar = Bukkit.createBossBar(ChatColor.DARK_PURPLE+"Tu entres en zone sécurisée... "+ChatColor.WHITE+coolDown+"/"+coolDownMax, BarColor.PURPLE, BarStyle.SOLID);
+		}
+		else
+		{
+			bossBar = Bukkit.createBossBar(ChatColor.DARK_PURPLE+"Tu quittes la zone sécurisée... "+ChatColor.WHITE+coolDown+"/"+coolDownMax, BarColor.PURPLE, BarStyle.SOLID);
+		}
+		bossBar.addPlayer(player);
 	}
 	
 	public void startEnter(boolean rebootCoolDown) {
@@ -39,14 +45,14 @@ public class PlayerCoolDown {
 			@Override
 			public void run() {
 				
-				if (coolDown >= coolDownMax) {
-					HumineSafe.getPlayerCoolDownManager().addPlayer(player);
-					player.sendMessage(ChatColor.GREEN+"Tu est a présent proteger par les terres sacrées....");
+				if (coolDown >= coolDownMax)
+				{
+					player.sendMessage(ChatColor.GREEN+"Te voilà maintenant protégé(e) !");
 					stop(true);
 				}
 				
-				bb.setTitle(ChatColor.DARK_PURPLE+"Tes pieds foules des terres sacrées... "+ChatColor.WHITE+coolDown+"/"+coolDownMax);
-				bb.setProgress( (float) ((coolDown * 100) / coolDownMax) / 100);
+				bossBar.setTitle(ChatColor.DARK_PURPLE+"Tu entres en zone sécurisée... "+ChatColor.WHITE+coolDown+"/"+coolDownMax);
+				bossBar.setProgress( (float) ((coolDown * 100) / coolDownMax) / 100);
 				coolDown++;
 				
 			}
@@ -56,8 +62,6 @@ public class PlayerCoolDown {
 	}
 	
 	public void startExit(boolean rebootCoolDown) {
-		HumineSafe.getPlayerCoolDownManager().removePlayer(player);
-		player.sendMessage(ChatColor.RED+"Tu a perdue la bénédiction des terres sacrées");
 		cds = CoolDownState.DECRESS;
 		if (rebootCoolDown)
 			coolDown = 30;
@@ -68,11 +72,13 @@ public class PlayerCoolDown {
 			@Override
 			public void run() {
 				
-				if (coolDown <= 0) {
+				if (coolDown <= 0)
+				{
+					player.sendMessage(ChatColor.RED+"Tu n'es désormais plus protégé(e), bonne chance !");
 					stop(true);
 				}
-				bb.setTitle(ChatColor.DARK_PURPLE+"Tes pieds quitte des terres sacrées... "+ChatColor.WHITE+coolDown+"/"+coolDownMax);
-				bb.setProgress( (float) ((coolDown * 100) / coolDownMax) / 100);
+				bossBar.setTitle(ChatColor.DARK_PURPLE+"Tu quittes la zone sécurisée... "+ChatColor.WHITE+coolDown+"/"+coolDownMax);
+				bossBar.setProgress( (float) ((coolDown * 100) / coolDownMax) / 100);
 				coolDown--;
 				
 			}
@@ -84,7 +90,7 @@ public class PlayerCoolDown {
 	public void stop(boolean remove) {
 		
 		Bukkit.getScheduler().cancelTask(task);
-		bb.removePlayer(player);
+		bossBar.removePlayer(player);
 		if (remove) {
 			HumineSafe.getPlayerCoolDownManager().removePlayerCoolDown(this);
 		}
@@ -94,7 +100,11 @@ public class PlayerCoolDown {
 	}
 	
 	public void addCoolDown(int incress) {
-		this.coolDownMax+=incress;
+			this.coolDownMax+=incress;
+			if (this.coolDownMax > 60 )
+			{
+				this.coolDownMax = 60;
+			}
 	}
 	
 	

@@ -9,11 +9,11 @@ import com.aymegike.huminesafe.utils.PlayerCoolDown;
 public class PlayerCoolDownManager {
 	
 	private ArrayList<PlayerCoolDown> pcds;	
-	private ArrayList<Player> pls;
+	//private ArrayList<Player> pls;
 	
 	public PlayerCoolDownManager() {
 		this.pcds = new ArrayList<PlayerCoolDown>();
-		this.pls = new ArrayList<Player>(); 
+		//this.pls = new ArrayList<Player>(); 
 	}
 	
 	public void addPlayerCoolDown(PlayerCoolDown playerCoolDown) {
@@ -28,7 +28,7 @@ public class PlayerCoolDownManager {
 		return pcds;
 	}
 	
-	public void addPlayer(Player player) {
+	/*public void addPlayer(Player player) {
 		pls.add(player);
 	}
 	
@@ -42,19 +42,26 @@ public class PlayerCoolDownManager {
 	
 	public boolean containPlayer(Player player) {
 		return pls.contains(player);
-	}
+	}*/
 	
-	public void addCooldownForPlayer(Player player)
+	/*public void addCooldownForPlayer(Player player)
 	{
 		pls.contains(player);
-	}
-	
-	public boolean containPlayerCoolDown(Player player) {
-		for (PlayerCoolDown pcd : pcds) {
-			if (pcd.getPlayer().getName().equalsIgnoreCase(player.getName())) {
-				return true;
+	}*/
+
+	public PlayerCoolDown getPlayerCoolDownForPlayer(Player player) {
+		for (PlayerCoolDown pcd : pcds)
+		{
+			if (pcd.getPlayer().getUniqueId().equals(player.getUniqueId()))
+			{
+				return pcd;
 			}
 		}
-		return false;
+		return null;
+	}
+	
+	public boolean containPlayerCoolDown(Player player)
+	{
+		return getPlayerCoolDownForPlayer(player) != null;
 	}
 }
